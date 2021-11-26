@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+     <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+    <script type="text/javascript" src="./loader_out_total.js"></script>
+    <script type="text/javascript" src="./maplogic.js"></script>
+    <link href="noUiSlider-15.5.0/no_ui_slider.min.css" rel="stylesheet">
+    <script src="noUiSlider-15.5.0/no_ui_slider.min.js"></script>
+    <style>
+      body {
+        height: 100%;
+        font-family: Verdana, sans-serif;
+      }
+      #page_container {
+        display: flex;
+        height: 100%;
+      }
+      #map { height: 100%; width: 50vw; }
+      .popover_img {height: 100px; width: 100px;}
+      .image_card {
+        border-radius: 5px;
+        border: 1px solid black;
+        padding: 10px;
+        margin: 10px;
+      }
+      .card_image{
+        height: 45vh;
+      }
+      #card_holder{
+        width: 100%;
+      }
+      #right_side_container{
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        width: 50vw;
+        height: 100%;
+        overflow: scroll;
+      }
+      #slider{
+        width: 150px;
+        margin: 0px 20px;
+      }
+      #search_container{
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+      }
+      #slider_container{
+        display: flex;
+      }
+      #right_side_header_text{
+        font-size: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="page_header">
+      <a href="">Home</a>
+      <a href="./uofr/UofRMoveEssay.html">University of Rochester Move</a>
+      <a href="./vet_memorial/VeteransMemorialBridgeEssay.html">Veteran's Memorial Bridge Construction</a>
+      <a href="./SpatialHistoryAboutEssay.html">About</a>
+    </div>
+    <div id="page_container">
+      <div id="map"></div>
+      <div id="right_side_container">
+        <div id="right_side_header">
+          <div id="right_side_header_text">Search and filter</div>
+          <div>Enter a search term below and apply filters. Image entries that match your search
+            will appear on the map and clicking them will show additional detail.
+          </div>
+          <div id="search_container">
+            <input id="search_input" type="text"/>
+            <div id="slider_container">
+              <div id="slider"></div>
+              <span>Date Range: </span><span id="date_range">1900-1950</span>
+            </div>
+          </div>
+        </div>
+        <div id="card_holder"></div>
+      </div>
+    </div>
+    <script type="text/javascript" src="./maplogic.js"></script>
+  </body>
+</html>
