@@ -139,24 +139,6 @@ function run_map_logic(map){
   function add_initial_layers(){
     populate_map(1900, 1950);
   }
-
-  function card_for_acc_num(acc_num){
-    const keys_to_ignore = ["image_url", "local_filename", "Materials", "Collection", "Category", "Maker", "Credits", "Names"];
-
-    entry = loader_out_total[acc_num];
-
-    // Filter out the entries we are not interested in.
-    entry_keys = Object.keys(entry).filter((val)=>keys_to_ignore.indexOf(val) == -1)
-
-    const rows = entry_keys.map((key)=>{
-      if(typeof entry[key] == "string" && key && entry[key]){
-        return `<div><span class="row_title"><b><u>${key}:</u></b> </span><span>${entry[key]}</span></div>`
-      } else {return '';}
-    }).reduce((a, b)=>a + b);
-
-    const img = `<img class="card_image" src="${entry["image_url"]}"/>`
-    return `<div class="image_card">${img}${rows}</div>`
-  }
   create_map();
   create_slider();
   setup_search();
@@ -165,6 +147,25 @@ function run_map_logic(map){
   setTimeout(setup_search,1000)
 
 }
+
+function card_for_acc_num(acc_num){
+  const keys_to_ignore = ["image_url", "local_filename", "Materials", "Collection", "Category", "Maker", "Credits", "Names"];
+
+  entry = loader_out_total[acc_num];
+
+  // Filter out the entries we are not interested in.
+  entry_keys = Object.keys(entry).filter((val)=>keys_to_ignore.indexOf(val) == -1)
+
+  const rows = entry_keys.map((key)=>{
+    if(typeof entry[key] == "string" && key && entry[key]){
+      return `<div><span class="row_title"><b><u>${key}:</u></b> </span><span>${entry[key]}</span></div>`
+    } else {return '';}
+  }).reduce((a, b)=>a + b);
+
+  const img = `<img class="card_image" src="${entry["image_url"]}"/>`
+  return `<div class="image_card">${img}${rows}</div>`
+}
+
 var loaded = false;
 window.addEventListener('DOMContentLoaded', (event) => {
   if(!loaded){
