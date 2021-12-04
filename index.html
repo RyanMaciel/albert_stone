@@ -12,32 +12,61 @@
     <link href="noUiSlider-15.5.0/no_ui_slider.min.css" rel="stylesheet">
     <script src="noUiSlider-15.5.0/no_ui_slider.min.js"></script>
     <link rel="stylesheet" href="./styles.css"/>
+    <style>
+      #home_content{
+        background-image: url('./collage.png');
+        background-repeat:no-repeat;
+        background-size: cover;
+        height: 100%;
+      }
+      .is-vcentered {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center; /* used this for multiple child */
+        align-items: center; /* if an only child */
+      }
+      .box{
+        box-shadow: 0 .5em 4em -.125em rgba(10,10,10,.7),0 0 0 1px rgba(10,10,10,.02);
+        padding: 1.5em;
+      }
+    </style>
   </head>
   <body>
-    <div id="page_header">
-      <a href="">Home</a>
-      <a href="./uofr/UofRMoveEssay.html">University of Rochester Move</a>
-      <a href="./vet_memorial/VeteransmemorialBridgeEssay.html">Veteran's Memorial Bridge Construction</a>
-      <a href="./SpatialHistoryAboutEssay.html">About</a>
-      <a href="./Methodology.html">Methodology</a>
-    </div>
-    <div id="page_container">
-      <div id="map"></div>
-      <div id="right_side_container">
-        <div id="right_side_header">
-          <div id="right_side_header_text">Search and filter</div>
-          <div>Enter a search term below and apply filters. Image entries that match your search
-            will appear on the map and clicking them will show additional detail.
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-start">
+        <a class="navbar-item" href="">Home</a>
+        <a class="navbar-item" href="./MapPage.html">Map</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            Case Studies
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="./uofr/UofRMoveEssay.html">University of Rochester Move</a>
+            <a class="navbar-item" href="./vet_memorial/VeteransmemorialBridgeEssay.html">Veteran's Memorial Bridge Construction</a>
           </div>
-          <div id="search_container">
-            <input id="search_input" type="text"/>
-            <div id="slider_container">
-              <div id="slider"></div>
-              <span>Date Range: </span><span id="date_range">1900-1950</span>
+        </div>
+        
+        <a class="navbar-item" href="./SpatialHistoryAboutEssay.html">About</a>
+        <a class="navbar-item" href="./Methodology.html">Methodology</a>
+      </div>
+    </nav>
+    <div id="home_content">
+        <div class="columns" style="height: 100%;">
+          <div class="column is-half is-offset-one-quarter has-text-left is-vcentered">
+            <div class="box is-vcentered">
+              <div>
+                <h1 class="title">Albert R. Stone Negative Collection</h1>
+                <h2 class="subtitle">A Spatial-Historical Perspective</h1>
+                <p>Albert R. Stone was a photographer for the Democrat and Chronicle and the Rochester Herald, two newspapers published in Rochester, New York. Stone worked from 1904 to 1936, a period of serious transformation and growth in the city. The collection of 14,000 glass negatives covers a range of subjects in the region, but holds a particular focus on the city’s transportation infrastructure.
+                  </p>
+                <p>Photo scans of the negatives are available through the <a href="http://collections.rmsc.org/LibCat/collections.html">RMSC’s online catalogue</a>. The goal of this project is to lift the collection from the archives and surface them in a spatially informed way. Many of the images contain hints about their original locations, and the associated notes on many of the images tell us the location of their creation specifically. The goal is that this project will open up new avenues for exploration of this important collection.</p>
+              </div>
+              <div class="has-text-centered" style="width:100%;">
+                <a href="./MapPage.html" class="button is-centered is-info">Explore Interactive Map</a>
+              </div>
             </div>
           </div>
         </div>
-        <div id="card_holder"></div>
       </div>
     </div>
     <script type="text/javascript" src="./maplogic.js"></script>

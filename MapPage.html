@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+     <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+    <script type="text/javascript" src="./loader_out_total.js"></script>
+    <script type="text/javascript" src="./maplogic.js"></script>
+    <link href="noUiSlider-15.5.0/no_ui_slider.min.css" rel="stylesheet">
+    <script src="noUiSlider-15.5.0/no_ui_slider.min.js"></script>
+    <link rel="stylesheet" href="./styles.css"/>
+  </head>
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-start">
+        <a class="navbar-item" href="./index.html">Home</a>
+        <a class="navbar-item" href="">Map</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            Case Studies
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="./uofr/UofRMoveEssay.html">University of Rochester Move</a>
+            <a class="navbar-item" href="./vet_memorial/VeteransmemorialBridgeEssay.html">Veteran's Memorial Bridge Construction</a>
+          </div>
+        </div>
+        
+        <a class="navbar-item" href="./SpatialHistoryAboutEssay.html">About</a>
+        <a class="navbar-item" href="./Methodology.html">Methodology</a>
+      </div>
+    </nav>
+    <div id="page_container">
+      <div id="map"></div>
+      <div id="right_side_container">
+        <div id="right_side_header">
+          <div id="right_side_header_text">Search and filter</div>
+          <div>Enter a search term below and apply filters. Image entries that match your search
+            will appear on the map and clicking them will show additional detail.
+          </div>
+          <div id="search_container">
+            <input id="search_input" type="text"/>
+            <div id="slider_container">
+              <div id="slider"></div>
+              <span>Date Range: </span><span id="date_range">1900-1950</span>
+            </div>
+          </div>
+        </div>
+        <div id="card_holder"></div>
+      </div>
+    </div>
+    <script type="text/javascript" src="./maplogic.js"></script>
+  </body>
+</html>
