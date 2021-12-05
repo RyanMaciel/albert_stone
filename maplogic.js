@@ -164,17 +164,46 @@ function old_url_to_new(old_url){
   return base_url;
 }
 
+
+function normalize_entry(entry){
+  // Shallow copy.
+  const copy_entry = Object.assign({}, entry);
+  // Fix name of entry, get rid of brackets
+  copy_entry["Result Title"] = copy_entry["result_title"].replace("[", "").replace("]", "");
+  delete copy_entry["result_title"]
+  
+  // Capitalize "address"
+  if(copy_entry["address"]){
+    copy_entry["Address"] = copy_entry["address"];
+    delete copy_entry["address"];
+  }
+
+  // Fix order of negative num, it parses weird
+  for(let key in copy_entry){
+    if(copy_entry[key].indexOf("Stone neg. number") != -1 && key != "Notes"){
+      copy_entry["Stone Negative Number"] = key;
+      delete copy_entry[key];
+    }
+  }
+
+  // Get rid of keys not needed for display.
+  const keys_to_ignore = ["image_url", "local_filename", "Materials", "Collection", "Category", "Maker"];
+
+  keys_to_ignore.forEach((key)=>delete copy_entry[key]);
+
+  return copy_entry;
+}
 function card_for_acc_num(acc_num){
-  const keys_to_ignore = ["image_url", "local_filename", "Materials", "Collection", "Category", "Maker", "Credits", "Names"];
 
   entry = loader_out_total[acc_num];
-
+  display_entry = normalize_entry(entry);
+  
   // Filter out the entries we are not interested in.
-  entry_keys = Object.keys(entry).filter((val)=>keys_to_ignore.indexOf(val) == -1)
+  ordered_entry_keys = ["Result Title", "Description", "Notes", "Date made", "Subject(s)", "Names", "Address", "Acc. No.", "Stone Negative Number", "Measurements", "Credits"]
 
-  const rows = entry_keys.map((key)=>{
-    if(typeof entry[key] == "string" && key && entry[key]){
-      return `<div><span class="row_title"><b><u>${key}:</u></b> </span><span>${entry[key]}</span></div>`
+  const rows = ordered_entry_keys.map((key)=>{
+    if(typeof display_entry[key] == "string" && key && display_entry[key]){
+      return `<div><span class="row_title"><b><u>${key}:</u></b> </span><span>${display_entry[key]}</span></div>`
     } else {return '';}
   }).reduce((a, b)=>a + b);
 
