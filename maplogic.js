@@ -78,7 +78,8 @@ function run_map_logic(map){
         var marker = L.marker([coords[0], coords[1]])
         marker.addTo(map).on("click", click_func);
         current_layers.push(marker);
-        marker.bindPopup("<b><img class=\"popover_img\"src=\"" + entry["image_url"] + "\">" + acc_num + "</b>")
+        const new_url = old_url_to_new(entry["image_url"]);
+        marker.bindPopup("<b><img class=\"popover_img\"src=\"" + new_url + "\">" + acc_num + "</b>")
       }
     }
   }
