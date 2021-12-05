@@ -148,6 +148,21 @@ function run_map_logic(map){
 
 }
 
+// The RMSC catalog serves http only, this archive can serve from
+// https, fixing mixed content blocking.
+function old_url_to_new(old_url){
+  var base_url = "https://photo.libraryweb.org/rochimag/rmsc/scm";
+
+  // pull out <2 digit num>/scm<num>.jpg
+  const matches = old_url.match(/([0-9]{2}\/.*.jpg)/gi);
+  if(matches && matches.length>0){
+    base_url += matches[0]
+  } else {
+    return old_url;
+  }
+  return base_url;
+}
+
 function card_for_acc_num(acc_num){
   const keys_to_ignore = ["image_url", "local_filename", "Materials", "Collection", "Category", "Maker", "Credits", "Names"];
 
@@ -162,7 +177,8 @@ function card_for_acc_num(acc_num){
     } else {return '';}
   }).reduce((a, b)=>a + b);
 
-  const img = `<img class="card_image" src="${entry["image_url"]}"/>`
+  const img_url = old_url_to_new(entry["image_url"])
+  const img = `<img class="card_image" src="${img_url}"/>`
   return `<div class="image_card">${img}${rows}</div>`
 }
 
