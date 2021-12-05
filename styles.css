@@ -8,6 +8,7 @@ body {
 }
 p {
   margin: 5px;
+  text-indent:2em;
 }
 .button {
   margin: 10px;
