@@ -40,19 +40,24 @@ function run_map_logic(map){
     slider.noUiSlider.on("update", slider_changed)
   }
 
+
+
   function setup_search(){
     console.log(document.getElementById('search_input'));
-    document.getElementById('search_input').addEventListener('input', function() {
-      search_string = this.value;
-      console.log(search_string);
+
+    // has to be an actual function bc this binding is weird.
+    const handle_search = function(){
+      const search_string = this.value;
+      console.log("Search String: " + search_string);
       current_layers.forEach((layer)=>map.removeLayer(layer))
       populate_map(current_start_date, current_end_date, search_string)
-    });
+
+      populate_results("", "", "", search_string);
+    }
+
+    document.getElementById('search_input').addEventListener('input', debounce(handle_search));
   }
 
-  function string_in_lower(str1, str2) {
-    return str1.toLowerCase().indexOf(str2.toLowerCase()) != -1;
-  }
 
   var current_start_date = 1900;
   var current_end_date = 1950;
@@ -66,10 +71,10 @@ function run_map_logic(map){
       // Get number from date
       let entry_date = parseInt(entry["Date made"].replace(/\D/g, ""))
       let passes_date_filter = (entry_date > start_date && entry_date < end_date);
-      let passes_search = !search_string || search_string.length == 0
-        || string_in_lower(entry["result_title"], search_string)
-        || string_in_lower(entry["Description"], search_string)
-        || string_in_lower(entry["Notes"], search_string)
+
+      // Search using the passed search string (still pass seach if the search string is undefined or "")
+      let passes_search = !search_string || search_string.length == 0 ||
+        entry_in_contains([entry["result_title"], entry["Description"], entry["Notes"]], search_string)
 
       let address = entry["address"] ? entry["address"] : "";
       let location_names = entry["location_names"] && entry["location_names"].length > 0 ? entry["location_names"] : []
@@ -95,7 +100,26 @@ function run_map_logic(map){
     }
   }
 
-  function entry_in(arr, entry){
+  /** UTILS SECTION  -- helps deal with some of the more frequent
+   * string and array comparisons we need. 
+   */
+
+  // Given array of strings, check if entry is contained by any of them.
+  function entry_in_contains(arr, q){
+    if(!arr) return false;
+    var result = false;
+    arr.forEach((e)=>{
+      if(lower_contains(e, q)) result = true;
+    })
+    return result;
+  }
+  
+  // Case-insensitive check if string1 contains string2.
+  function lower_contains(string1, string2){
+    if(!string1 || !string2) return false;
+    return string1 && string2 && string1.toLowerCase().indexOf(string2.toLowerCase()) != -1;
+  }
+  function entry_in_eq(arr, entry){
     if(!arr) return false;
     var result = false;
     arr.forEach((e)=>{
@@ -107,9 +131,31 @@ function run_map_logic(map){
     if(!string1 || !string2) return false;
     return string1 && string2 && string1.toLowerCase() == string2.toLowerCase();
   }
-  function marker_click(acc_num, address, location_names){
+
+  // Debounce for searching
+  // source: https://davidwalsh.name/javascript-debounce-function
+  function debounce(func, wait=250, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+
+
+  function populate_results(acc_num, address, location_names, search_string){
     let card_html = ""
-    cards_string = card_for_acc_num(acc_num);
+    cards_string = "";
+    if(acc_num){
+      cards_string += card_for_acc_num(acc_num);
+    }
     if(address.length > 0){
       for(const curr_acc_num in loader_out_total){
         if(lower_equals(loader_out_total[curr_acc_num]["address"], address) && curr_acc_num != acc_num){
@@ -120,11 +166,23 @@ function run_map_logic(map){
     if(location_names.length > 0){
       location_names.forEach((location_name)=>{
         for(const curr_acc_num in loader_out_total){
-          if(entry_in(loader_out_total[curr_acc_num]["location_names"], location_name) && curr_acc_num != acc_num){
+          if(entry_in_eq(loader_out_total[curr_acc_num]["location_names"], location_name) && curr_acc_num != acc_num){
             cards_string += card_for_acc_num(curr_acc_num)
           }
         } 
       });
+    }
+
+    if(search_string && search_string.length > 0){
+
+      // Search the titles, descriptions and notes for the search string.
+      for(const curr_acc_num in loader_out_total){
+        const current_entry = loader_out_total[curr_acc_num];
+        const search_areas = [current_entry["result_title"], current_entry["Description"], current_entry["Notes"]];
+        if(entry_in_contains(search_areas, search_string)){
+            cards_string += card_for_acc_num(curr_acc_num)
+          }
+      }
     }
     
     card_html = `<div>${cards_string}</div>`;
@@ -134,7 +192,7 @@ function run_map_logic(map){
   }
 
   function bind_acc_num_to_click_event(acc_num, address, location_names){
-    return ()=>marker_click(acc_num, address, location_names);
+    return ()=>populate_results(acc_num, address, location_names);
   }
 
   function add_initial_layers(){
@@ -201,12 +259,16 @@ function card_for_acc_num(acc_num){
   // Filter out the entries we are not interested in.
   ordered_entry_keys = ["Result Title", "Description", "Notes", "Date made", "Subject(s)", "Names", "Address", "Acc. No.", "Stone Negative Number", "Measurements", "Credits"]
 
-  const rows = ordered_entry_keys.map((key)=>{
+  let rows = ordered_entry_keys.map((key)=>{
     if(typeof display_entry[key] == "string" && key && display_entry[key]){
       return `<div><span class="row_title"><b><u>${key}:</u></b> </span><span>${display_entry[key]}</span></div>`
     } else {return '';}
   }).reduce((a, b)=>a + b);
 
+  // Label entry as not located if we don't have coords.
+  if(!entry["coordinates"]){
+    rows += `<div><span><b>Please note this entry has not yet been geolocated and will only appear in search.</b></span></div>`
+  }
   const img_url = old_url_to_new(entry["image_url"])
   const img = `<img class="card_image" src="${img_url}"/>`
   return `<div class="image_card">${img}${rows}</div>`
