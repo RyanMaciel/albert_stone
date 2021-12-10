@@ -54,3 +54,15 @@ p {
 #right_side_header_text{
   font-size: 2em;
 }
+.extra_image_caption{
+  font-size: 0.8em;
+}
+
+.subtitle{
+  margin-top: 1.5em;
+}
+.bqoute{
+  margin: 2em 3em;
+  
+  font-size: 0.85em;
+}
