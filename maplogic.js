@@ -65,12 +65,17 @@ function run_map_logic(map){
     current_start_date = start_date;
     current_end_date = end_date;
     for(const acc_num in loader_out_total){
-      entry = loader_out_total[acc_num];
+      let entry = loader_out_total[acc_num];
+      if(!entry.hasOwnProperty("coordinates")) continue;
       let coords = entry["coordinates"];
       
-      // Get number from date
-      let entry_date = parseInt(entry["Date made"].replace(/\D/g, ""))
-      let passes_date_filter = (entry_date > start_date && entry_date < end_date);
+      // Get number from date, if none exists, don't show.
+      let passes_date_filter = false;
+      if(entry.hasOwnProperty("Date made")){
+        let entry_date = parseInt(entry["Date made"].replace(/\D/g, ""))
+        passes_date_filter = (entry_date > start_date && entry_date < end_date);
+      }
+      
 
       // Search using the passed search string (still pass seach if the search string is undefined or "")
       let passes_search = !search_string || search_string.length == 0 ||
